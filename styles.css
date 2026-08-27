@@ -1,4 +1,6 @@
-/* reset */
+/* ==========================================================================
+   1. RESET & GENERAL SETUP
+   ========================================================================== */
 
 *,
 *::before,
@@ -44,23 +46,38 @@ img {
   height: auto;
 }
 
-/* header */
+/* Shared Container Layout */
+.app-container {
+  display: flex;
+  gap: 50px;
+  background: #111111;
+  color: white;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  max-width: 800px;
+  width: 90%;
+  margin: 40px auto;
+  flex-wrap: wrap; /* Allows stacking on smaller screens */
+}
+
+
+/* ==========================================================================
+   2. HEADER & NAVBAR
+   ========================================================================== */
 
 .navbar {
   width: 90%;
   min-height: 65px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 0 30px;
-
   background: transparent;
   border: 2px solid white;
   border-radius: 30px;
-
   box-sizing: border-box;
   font-size: 20px;
 }
@@ -79,7 +96,6 @@ img {
 .navbar-links a {
   color: white;
   text-decoration: none;
-
   transition: 0.2s ease;
 }
 
@@ -87,7 +103,6 @@ img {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Responsive */
 @media (max-width: 600px) {
   .navbar {
     padding: 12px 18px;
@@ -111,31 +126,80 @@ img {
   }
 }
 
-/* section 1 */
 
-/* section 2 */
+/* ==========================================================================
+   3. HERO SECTION
+   ========================================================================== */
 
-/* footer */
-
-/* General Page Styling */
+/* Add Hero section styles here */
 
 
-.app-container {
-  display: flex;
-  gap: 50px;
-  background: #111111;
-  color: white;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-  max-width: 800px;
-  width: 90%;
-  margin: 40px auto;
-  flex-wrap: wrap; /* Allows stacking on smaller screens */
+/* ==========================================================================
+   4. YES OR NO SECTION
+   ========================================================================== */
+
+.yn-container {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-/* ------------------ Left Side: Wheel ------------------ */
+.yn-container h2 {
+  font-size: 1.8rem;
+  color: #ffffff;
+}
+
+.yn-input-wrapper {
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+}
+
+#yn-input {
+  flex: 1;
+  padding: 12px;
+  background-color: #1a1a1a;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+}
+
+#yn-input:focus {
+  border-color: #3b82f6;
+}
+
+#yn-btn {
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+#yn-btn:hover {
+  background-color: #2563eb;
+}
+
+#yn-result {
+  font-size: 3rem;
+  font-weight: bold;
+  min-height: 60px;
+  margin-top: 10px;
+  transition: color 0.2s;
+  margin: auto;
+}
+
+
+/* ==========================================================================
+   5. WHEEL SECTION
+   ========================================================================== */
+
+/* Left Side: Spin Wheel */
 .wheel-section {
   flex: 1;
   text-align: center;
@@ -173,20 +237,19 @@ img {
   z-index: 10;
 }
 
-/* This styles the text labels sitting on the slices */
 .wheel-label {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 45%;         /* Take up a bit less than half the width */
-  text-align: right;  /* Push text toward the outer edge */
+  width: 45%;
+  text-align: right;
   padding-right: 20px;
-  transform-origin: 0 0; /* Rotate from the exact center (left edge of this div) */
+  transform-origin: 0 0;
   color: white;
   font-weight: bold;
   font-size: 14px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9); /* Ensures readability on all colors */
-  pointer-events: none; /* Prevent text from interfering with spins */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
 }
 
 #spin-btn {
@@ -197,7 +260,6 @@ img {
   background-color: #3b82f6;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   transition: background-color 0.2s;
 }
 
@@ -213,7 +275,7 @@ img {
   min-height: 30px;
 }
 
-/* ------------------ Right Side: List ------------------ */
+/* Right Side: Wheel Options List */
 .list-section {
   flex: 1;
   min-width: 250px;
@@ -254,7 +316,6 @@ img {
   color: white;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-weight: bold;
 }
 
@@ -289,10 +350,16 @@ img {
   border: none;
   border-radius: 4px;
   padding: 4px 8px;
-  cursor: pointer;
   font-weight: bold;
 }
 
 .delete-btn:hover {
   background-color: #dc2626;
 }
+
+
+/* ==========================================================================
+   6. FOOTER
+   ========================================================================== */
+
+/* Add Footer section styles here */
