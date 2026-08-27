@@ -5,35 +5,247 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Our beautiful idea</title>
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <header>
       <nav class="navbar">
-        <div class="navbar-name">Choose for me!</div>
+        <div class="navbar-name">choose for me!</div>
         <div class="navbar-links">
-          <a href="#">Yes/No</a>
-          <a href="#">Wheel</a>
+          <a href="#about-us">about us</a>
+          <a href="#yes-no">yes/no</a>
+          <a href="#wheel">wheel</a>
         </div>
       </nav>
     </header>
 
     <main>
       <!-- Hero -->
-      <section></section>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>
+            Can't Decide?<br />
+            Let the Wheel Decide.
+          </h1>
+
+          <p class="hero-question">
+            <strong>Stuck between "yes" and "no"?</strong><br />
+            Can't choose what to eat, where to go, or what to do next? Don't
+            worry — we've all been there.
+          </p>
+
+          <p class="hero-description">
+            This website is made for those moments when making a simple decision
+            somehow becomes the hardest decision of the day. Spin the wheel,
+            choose between <strong>Yes or No</strong>, and let fate make the
+            choice for you.
+          </p>
+
+          <h2>Stop overthinking.</h2>
+          <h2>Just spin it.</h2>
+        </div>
+      </section>
 
       <!-- Yes or No -->
-      <section></section>
+      <section id="#yes-no"></section>
 
       <!-- Wheel -->
-      <section></section>
+      <section id="#wheel">
+        <div class="app-container">
+          <!-- Left side: The Wheel -->
+          <div class="wheel-section">
+            <div class="wheel-container">
+              <div class="pointer"></div>
+              <div class="wheel" id="wheel"></div>
+            </div>
+            <button id="spin-btn">Spin the Wheel</button>
+            <p id="result"></p>
+          </div>
+
+          <!-- Right side: The Options List -->
+          <div class="list-section">
+            <h2>Wheel Options</h2>
+            <div class="input-group">
+              <input
+                type="text"
+                id="new-option"
+                placeholder="Enter an option..."
+              />
+              <button id="add-btn">Add</button>
+            </div>
+            <ul id="options-list"></ul>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer></footer>
   </body>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spin-btn");
+    const resultDisplay = document.getElementById("result");
+
+    const optionInput = document.getElementById("new-option");
+    const addBtn = document.getElementById("add-btn");
+    const optionsList = document.getElementById("options-list");
+
+    // Default options and a color palette
+    let options = ["Pizza", "Burgers", "Tacos", "Sushi", "Salad"];
+    const colors = [
+      "#f43f5e",
+      "#f97316",
+      "#eab308",
+      "#22c55e",
+      "#3b82f6",
+      "#a855f7",
+      "#ec4899",
+      "#14b8a6",
+    ];
+
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    // Initialize app
+    function init() {
+      renderList();
+      renderWheel();
+    }
+
+    // 1. Render the List UI
+    function renderList() {
+      optionsList.innerHTML = "";
+      options.forEach((option, index) => {
+        const li = document.createElement("li");
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = option;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "X";
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.onclick = () => removeOption(index);
+
+        li.appendChild(textSpan);
+        li.appendChild(deleteBtn);
+        optionsList.appendChild(li);
+      });
+    }
+
+    // 2. Render the Wheel with dynamic slices and text
+    function renderWheel() {
+      if (options.length === 0) {
+        wheel.style.background = "#ccc";
+        wheel.innerHTML = "";
+        return;
+      }
+
+      const sliceDegree = 360 / options.length;
+      let gradientParts = [];
+      wheel.innerHTML = ""; // Clear existing text elements
+
+      options.forEach((option, index) => {
+        const color = colors[index % colors.length];
+        const startAngle = index * sliceDegree;
+        const endAngle = startAngle + sliceDegree;
+
+        // Add color to conic-gradient string
+        gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
+
+        // Add text onto the wheel
+        const label = document.createElement("div");
+        label.classList.add("wheel-label");
+        label.textContent = option;
+
+        // Calculate rotation to center text within its slice.
+        // Subtract 90deg because CSS 0deg points right, but conic-gradient 0deg points up.
+        const textRotation = startAngle + sliceDegree / 2 - 90;
+        label.style.transform = `rotate(${textRotation}deg) translateY(-50%)`;
+
+        wheel.appendChild(label);
+      });
+
+      wheel.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+    }
+
+    // 3. Add new option
+    function addOption() {
+      const value = optionInput.value.trim();
+      if (value === "") return;
+
+      options.push(value);
+      optionInput.value = ""; // clear input
+
+      // Reset wheel position when adding/removing so it doesn't jump weirdly
+      currentRotation = 0;
+      wheel.style.transition = "none";
+      wheel.style.transform = `rotate(0deg)`;
+      setTimeout(
+        () =>
+          (wheel.style.transition =
+            "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)"),
+        50,
+      );
+
+      renderList();
+      renderWheel();
+    }
+
+    // 4. Remove an option
+    function removeOption(index) {
+      if (isSpinning) return; // Prevent deletion while spinning
+      options.splice(index, 1);
+
+      currentRotation = 0;
+      wheel.style.transition = "none";
+      wheel.style.transform = `rotate(0deg)`;
+      setTimeout(
+        () =>
+          (wheel.style.transition =
+            "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)"),
+        50,
+      );
+
+      renderList();
+      renderWheel();
+    }
+
+    // 5. Spin logic
+    spinBtn.addEventListener("click", () => {
+      if (isSpinning || options.length === 0) return;
+
+      isSpinning = true;
+      resultDisplay.textContent = "Spinning...";
+
+      const randomSpin = Math.floor(Math.random() * 360) + 1800; // 5 full spins + random
+      currentRotation += randomSpin;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+    });
+
+    wheel.addEventListener("transitionend", () => {
+      if (!isSpinning) return;
+      isSpinning = false;
+
+      if (options.length === 0) return;
+
+      const sliceDegree = 360 / options.length;
+      const actualDegrees = currentRotation % 360;
+
+      // Match top pointer degree logic
+      const pointerDegree = (360 - actualDegrees) % 360;
+      const winningIndex = Math.floor(pointerDegree / sliceDegree);
+
+      resultDisplay.textContent = `You won: ${options[winningIndex]}!`;
+    });
+
+    // Allow pressing 'Enter' to add
+    optionInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") addOption();
+    });
+
+    addBtn.addEventListener("click", addOption);
+
+    // Run on page load
+    init();
+  </script>
 </html>
