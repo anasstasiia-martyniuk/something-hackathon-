@@ -76,25 +76,55 @@ img {
    2. HEADER & NAVBAR
    ========================================================================== */
 
+header {
+  position: sticky;
+  top: 0;
+
+  z-index: 1000;
+
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
 .navbar {
   width: 75%;
   min-height: 65px;
+
   margin: 0 auto;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 0 30px;
-  background: transparent;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   border: 2px solid white;
   border-radius: 30px;
+
   box-sizing: border-box;
+
   font-size: 20px;
-  margin-top: 30px;
 }
 
 .navbar-name {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 10px;
+
   color: white;
   font-weight: bold;
+}
+
+.dice-icon {
+  width: 30px;
+  height: 30px;
+  fill: #ffffff !important;
+  align-items: center;
 }
 
 .navbar-links {
@@ -106,6 +136,7 @@ img {
 .navbar-links a {
   color: white;
   text-decoration: none;
+
   transition: 0.2s ease;
 }
 
@@ -113,9 +144,18 @@ img {
   color: rgb(18, 172, 18);
 }
 
+/* Responsive */
+
 @media (max-width: 600px) {
+  header {
+    padding-top: 15px;
+  }
+
   .navbar {
+    width: 90%;
+
     padding: 12px 18px;
+
     flex-direction: column;
     gap: 10px;
   }
@@ -126,7 +166,9 @@ img {
 
   .navbar-links {
     width: 100%;
+
     justify-content: center;
+
     gap: 10px;
   }
 
