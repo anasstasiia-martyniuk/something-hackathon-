@@ -9,55 +9,95 @@
   <body>
     <header>
       <nav class="navbar">
-        <div class="navbar-name">Choose for me!</div>
+        <div class="navbar-name">choose for me!</div>
         <div class="navbar-links">
-          <a href="#yes-no-section">Yes/No</a>
-          <a href="#wheel-section">Wheel</a>
+          <a href="#about-us">about us</a>
+          <a href="#yes-no">yes/no</a>
+          <a href="#wheel">wheel</a>
         </div>
       </nav>
     </header>
 
     <main>
       <!-- Hero -->
-      <section></section>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>
+            Can't Decide?<br />
+            Let the Wheel Decide.
+          </h1>
+
+          <p class="hero-question">
+            <strong>Stuck between "yes" and "no"?</strong><br />
+            Can't choose what to eat, where to go, or what to do next? Don't
+            worry — we've all been there.
+          </p>
+
+          <p class="hero-description">
+            This website is made for those moments when making a simple decision
+            somehow becomes the hardest decision of the day. Spin the wheel,
+            choose between <strong>Yes or No</strong>, and let fate make the
+            choice for you.
+          </p>
+
+          <h2>Stop overthinking. Just spin it.</h2>
+        </div>
+      </section>
+
+      <hr class="line" />
 
       <!-- Yes or No -->
-      <section id="yes-no-section">
-        <!-- We use app-container to keep the dark theme box styling consistent -->
-        <div class="app-container center-content">
+      <section id="yes-no">
+        <div class="app-container yes-no-container">
           <h2 class="section-title">Ask a Yes or No Question</h2>
-          <div class="input-group width-limit">
-            <input type="text" id="yn-input" placeholder="Should I order pizza tonight?" />
+
+          <div class="input-group yes-no-input">
+            <input
+              type="text"
+              id="yn-input"
+              placeholder="Should I order pizza tonight?"
+            />
+
             <button id="yn-btn">Ask!</button>
           </div>
+
           <p id="yn-result"></p>
         </div>
       </section>
 
+      <hr class="line" />
+
       <!-- Wheel -->
-      <section id="wheel-section">
-        <div class="app-container">
-          
-          <!-- Left side: The Wheel -->
-          <div class="wheel-section-inner">
+      <section id="wheel">
+        <div class="app-container wheel-container-box">
+          <!-- Wheel -->
+          <div class="wheel-section">
             <div class="wheel-container">
               <div class="pointer"></div>
-              <div class="wheel" id="wheel"></div>
+              <div class="wheel" id="wheel-element"></div>
             </div>
+
             <button id="spin-btn">Spin the Wheel</button>
+
             <p id="result"></p>
           </div>
 
-          <!-- Right side: The Options List -->
+          <!-- Options -->
           <div class="list-section">
             <h2>Wheel Options</h2>
+
             <div class="input-group">
-              <input type="text" id="new-option" placeholder="Enter an option..." />
+              <input
+                type="text"
+                id="new-option"
+                placeholder="Enter an option..."
+              />
+
               <button id="add-btn">Add</button>
             </div>
+
             <ul id="options-list"></ul>
           </div>
-
         </div>
       </section>
     </main>
@@ -66,187 +106,256 @@
   </body>
 
   <script>
-      // ==========================================
-      // WHEEL LOGIC
-      // ==========================================
-      const wheel = document.getElementById("wheel");
-      const spinBtn = document.getElementById("spin-btn");
-      const resultDisplay = document.getElementById("result");
-      
-      const optionInput = document.getElementById("new-option");
-      const addBtn = document.getElementById("add-btn");
-      const optionsList = document.getElementById("options-list");
+    // ============================================================
+    // YES / NO
+    // ============================================================
 
-      // Default options and a color palette
-      let options = ["Pizza", "Burgers", "Tacos", "Sushi", "Salad"];
-      const colors = ["#f43f5e", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#a855f7", "#ec4899", "#14b8a6"];
+    const ynInput = document.getElementById("yn-input");
+    const ynBtn = document.getElementById("yn-btn");
+    const ynResult = document.getElementById("yn-result");
 
-      let currentRotation = 0;
-      let isSpinning = false;
+    // When the Ask button is clicked
+    ynBtn.addEventListener("click", askYesNo);
 
-      // Initialize app
-      function init() {
-        renderList();
-        renderWheel();
+    function askYesNo() {
+      const question = ynInput.value.trim();
+
+      // Don't answer if the input is empty
+      if (question === "") {
+        ynResult.textContent = "Ask me something!";
+        return;
       }
 
-      // 1. Render the List UI
-      function renderList() {
-        optionsList.innerHTML = "";
-        options.forEach((option, index) => {
-          const li = document.createElement("li");
-          
-          const textSpan = document.createElement("span");
-          textSpan.textContent = option;
-          
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "X";
-          deleteBtn.classList.add("delete-btn");
-          deleteBtn.onclick = () => removeOption(index);
+      // Randomly choose YES or NO
+      const answer = Math.random() < 0.5 ? "YES!" : "NO!";
 
-          li.appendChild(textSpan);
-          li.appendChild(deleteBtn);
-          optionsList.appendChild(li);
-        });
+      ynResult.textContent = answer;
+    }
+
+    // Allow pressing Enter to ask the question
+    ynInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        askYesNo();
+      }
+    });
+
+    // ============================================================
+    // WHEEL
+    // ============================================================
+
+    const wheel = document.getElementById("wheel-element");
+    const spinBtn = document.getElementById("spin-btn");
+    const resultDisplay = document.getElementById("result");
+
+    const optionInput = document.getElementById("new-option");
+    const addBtn = document.getElementById("add-btn");
+    const optionsList = document.getElementById("options-list");
+
+    // Default options and a color palette
+    let options = ["Pizza", "Burgers", "Tacos", "Sushi", "Salad"];
+
+    const colors = [
+      "#f43f5e",
+      "#f97316",
+      "#eab308",
+      "#22c55e",
+      "#3b82f6",
+      "#a855f7",
+      "#ec4899",
+      "#14b8a6",
+    ];
+
+    let currentRotation = 0;
+    let isSpinning = false;
+
+    // Initialize app
+    function init() {
+      renderList();
+      renderWheel();
+    }
+
+    // ============================================================
+    // 1. Render the List UI
+    // ============================================================
+
+    function renderList() {
+      optionsList.innerHTML = "";
+
+      options.forEach((option, index) => {
+        const li = document.createElement("li");
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = option;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "X";
+        deleteBtn.classList.add("delete-btn");
+
+        deleteBtn.onclick = () => removeOption(index);
+
+        li.appendChild(textSpan);
+        li.appendChild(deleteBtn);
+
+        optionsList.appendChild(li);
+      });
+    }
+
+    // ============================================================
+    // 2. Render the Wheel with dynamic slices and text
+    // ============================================================
+
+    function renderWheel() {
+      if (options.length === 0) {
+        wheel.style.background = "#ccc";
+        wheel.innerHTML = "";
+        return;
       }
 
-      // 2. Render the Wheel with dynamic slices and text
-      function renderWheel() {
-        if (options.length === 0) {
-          wheel.style.background = "#ccc";
-          wheel.innerHTML = "";
-          return;
-        }
+      const sliceDegree = 360 / options.length;
 
-        const sliceDegree = 360 / options.length;
-        let gradientParts = [];
-        wheel.innerHTML = ""; // Clear existing text elements
+      let gradientParts = [];
 
-        options.forEach((option, index) => {
-          const color = colors[index % colors.length];
-          const startAngle = index * sliceDegree;
-          const endAngle = startAngle + sliceDegree;
-          
-          gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
+      wheel.innerHTML = "";
 
-          const label = document.createElement("div");
-          label.classList.add("wheel-label");
-          label.textContent = option;
+      options.forEach((option, index) => {
+        const color = colors[index % colors.length];
 
-          const textRotation = startAngle + (sliceDegree / 2) - 90;
-          label.style.transform = `rotate(${textRotation}deg) translateY(-50%)`;
-          
-          wheel.appendChild(label);
-        });
+        const startAngle = index * sliceDegree;
+        const endAngle = startAngle + sliceDegree;
 
-        wheel.style.background = `conic-gradient(${gradientParts.join(", ")})`;
-      }
+        // Add color to conic-gradient
+        gradientParts.push(`${color} ${startAngle}deg ${endAngle}deg`);
 
-      // 3. Add new option
-      function addOption() {
-        const value = optionInput.value.trim();
-        if (value === "") return;
-        
-        options.push(value);
-        optionInput.value = ""; 
-        
-        currentRotation = 0;
-        wheel.style.transition = "none";
-        wheel.style.transform = `rotate(0deg)`;
-        setTimeout(() => wheel.style.transition = "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)", 50);
+        // Add text onto the wheel
+        const label = document.createElement("div");
 
-        renderList();
-        renderWheel();
-      }
+        label.classList.add("wheel-label");
+        label.textContent = option;
 
-      // 4. Remove an option
-      function removeOption(index) {
-        if (isSpinning) return; 
-        options.splice(index, 1);
-        
-        currentRotation = 0;
-        wheel.style.transition = "none";
-        wheel.style.transform = `rotate(0deg)`;
-        setTimeout(() => wheel.style.transition = "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)", 50);
+        // Position text in the middle of its slice
+        const textRotation = startAngle + sliceDegree / 2 - 90;
 
-        renderList();
-        renderWheel();
-      }
+        label.style.transform = `rotate(${textRotation}deg) translateY(-50%)`;
 
-      // 5. Spin logic
-      spinBtn.addEventListener("click", () => {
-        if (isSpinning || options.length === 0) return;
-
-        isSpinning = true;
-        resultDisplay.textContent = "Spinning...";
-
-        const randomSpin = Math.floor(Math.random() * 360) + 1800; 
-        currentRotation += randomSpin;
-        wheel.style.transform = `rotate(${currentRotation}deg)`;
+        wheel.appendChild(label);
       });
 
-      wheel.addEventListener("transitionend", () => {
-        if (!isSpinning) return;
-        isSpinning = false;
+      wheel.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+    }
 
-        if (options.length === 0) return;
+    // ============================================================
+    // 3. Add new option
+    // ============================================================
 
-        const sliceDegree = 360 / options.length;
-        const actualDegrees = currentRotation % 360;
-        
-        const pointerDegree = (360 - actualDegrees) % 360;
-        const winningIndex = Math.floor(pointerDegree / sliceDegree);
+    function addOption() {
+      const value = optionInput.value.trim();
 
-        resultDisplay.textContent = `You won: ${options[winningIndex]}!`;
-      });
+      if (value === "") return;
 
-      optionInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") addOption();
-      });
+      options.push(value);
 
-      addBtn.addEventListener("click", addOption);
+      optionInput.value = "";
 
-      init();
+      // Reset wheel position
+      currentRotation = 0;
 
-      // ==========================================
-      // YES OR NO LOGIC
-      // ==========================================
-      const ynInput = document.getElementById("yn-input");
-      const ynBtn = document.getElementById("yn-btn");
-      const ynResult = document.getElementById("yn-result");
+      wheel.style.transition = "none";
+      wheel.style.transform = "rotate(0deg)";
 
-      function askYesNo() {
-        const question = ynInput.value.trim();
-        
-        if (question === "") {
-          ynResult.textContent = "Please type a question first!";
-          ynResult.style.color = "#ffffff";
-          return;
-        }
+      setTimeout(
+        () =>
+          (wheel.style.transition =
+            "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)"),
+        50,
+      );
 
-        // Show thinking animation
-        ynResult.textContent = "Thinking...";
-        ynResult.style.color = "#ffffff";
+      renderList();
+      renderWheel();
+    }
 
-        // Wait half a second for dramatic effect, then pick Yes or No
-        setTimeout(() => {
-          const isYes = Math.random() >= 0.5; // 50% chance 
-          
-          if (isYes) {
-            ynResult.textContent = "YES";
-            ynResult.style.color = "#22c55e"; // Green
-          } else {
-            ynResult.textContent = "NO";
-            ynResult.style.color = "#ef4444"; // Red
-          }
-        }, 500);
+    // ============================================================
+    // 4. Remove an option
+    // ============================================================
+
+    function removeOption(index) {
+      if (isSpinning) return;
+
+      options.splice(index, 1);
+
+      currentRotation = 0;
+
+      wheel.style.transition = "none";
+      wheel.style.transform = "rotate(0deg)";
+
+      setTimeout(
+        () =>
+          (wheel.style.transition =
+            "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)"),
+        50,
+      );
+
+      renderList();
+      renderWheel();
+    }
+
+    // ============================================================
+    // 5. Spin logic
+    // ============================================================
+
+    spinBtn.addEventListener("click", () => {
+      if (isSpinning || options.length === 0) return;
+
+      isSpinning = true;
+
+      resultDisplay.textContent = "Spinning...";
+
+      // 5 full spins + random rotation
+      const randomSpin = Math.floor(Math.random() * 360) + 1800;
+
+      currentRotation += randomSpin;
+
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+    });
+
+    // ============================================================
+    // 6. Get the winning option
+    // ============================================================
+
+    wheel.addEventListener("transitionend", () => {
+      if (!isSpinning) return;
+
+      isSpinning = false;
+
+      if (options.length === 0) return;
+
+      const sliceDegree = 360 / options.length;
+
+      const actualDegrees = currentRotation % 360;
+
+      const pointerDegree = (360 - actualDegrees) % 360;
+
+      const winningIndex = Math.floor(pointerDegree / sliceDegree);
+
+      resultDisplay.textContent = `You won: ${options[winningIndex]}!`;
+    });
+
+    // ============================================================
+    // 7. Allow pressing Enter to add an option
+    // ============================================================
+
+    optionInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        addOption();
       }
+    });
 
-      ynBtn.addEventListener("click", askYesNo);
-      
-      // Let user press Enter to ask
-      ynInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") askYesNo();
-      });
+    // Add button
+    addBtn.addEventListener("click", addOption);
+
+    // ============================================================
+    // 8. Run app on page load
+    // ============================================================
+
+    init();
   </script>
 </html>
