@@ -107,32 +107,80 @@
 
   <script>
     // ============================================================
-    // YES / NO
+    // YES / NO (DETERMINISTIC / PREDICTIVE)
     // ============================================================
 
     const ynInput = document.getElementById("yn-input");
     const ynBtn = document.getElementById("yn-btn");
     const ynResult = document.getElementById("yn-result");
 
-    // When the Ask button is clicked
-    ynBtn.addEventListener("click", askYesNo);
+    // Response pool
+    const responses = [
+      // Positive (Green)
+      { text: "YES!", color: "#22c55e" },
+      { text: "ABSOLUTELY!", color: "#22c55e" },
+      { text: "MOST LIKELY", color: "#22c55e" },
+      { text: "WITHOUT A DOUBT", color: "#22c55e" },
+      { text: "SIGNS POINT TO YES", color: "#22c55e" },
+
+      // Neutral / Uncertain (Yellow)
+      { text: "MAYBE", color: "#eab308" },
+      { text: "ASK AGAIN LATER", color: "#eab308" },
+      { text: "CANNOT PREDICT NOW", color: "#eab308" },
+      { text: "REPLY HAZY, TRY AGAIN", color: "#eab308" },
+
+      // Negative (Red)
+      { text: "NO!", color: "#ef4444" },
+      { text: "DON'T COUNT ON IT", color: "#ef4444" },
+      { text: "VERY DOUBTFUL", color: "#ef4444" },
+      { text: "MY SOURCES SAY NO", color: "#ef4444" },
+      { text: "OUTLOOK NOT SO GOOD", color: "#ef4444" },
+    ];
+
+    // Hash function: converts any string into a unique numerical code
+    function getHashFromString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return Math.abs(hash);
+    }
 
     function askYesNo() {
       const question = ynInput.value.trim();
 
-      // Don't answer if the input is empty
       if (question === "") {
         ynResult.textContent = "Ask me something!";
+        ynResult.style.color = "#ffffff";
         return;
       }
 
-      // Randomly choose YES or NO
-      const answer = Math.random() < 0.5 ? "YES!" : "NO!";
+      ynResult.textContent = "Thinking...";
+      ynResult.style.color = "#ffffff";
 
-      ynResult.textContent = answer;
+      setTimeout(() => {
+        // 1. Normalize: convert to lower case & strip punctuation/extra spaces
+        // so "Will it rain?" and "will it rain" yield the exact same result
+        const normalizedQuestion = question
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+
+        // 2. Compute deterministic index based on the string hash
+        const hash = getHashFromString(normalizedQuestion);
+        const index = hash % responses.length;
+
+        // 3. Display the locked-in answer
+        const selectedResponse = responses[index];
+        ynResult.textContent = selectedResponse.text;
+        ynResult.style.color = selectedResponse.color;
+      }, 400);
     }
 
-    // Allow pressing Enter to ask the question
+    // Event Listeners
+    ynBtn.addEventListener("click", askYesNo);
+
     ynInput.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         askYesNo();
